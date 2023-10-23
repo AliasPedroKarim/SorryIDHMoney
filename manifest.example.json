@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "SorryIDHMoney",
+  "description": "Euhh! On a pas beaucoup d'argent ^^",
+  "version": "0.1",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/self-youtube-ads-block.js"],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://www.youtube-nocookie.com/*"
+      ]
+    },
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["scripts/global-content.js"]
+    },
+    {
+      "matches": ["https://mavanimes.cc/*"],
+      "js": ["scripts/mavanimes-content.js"]
+    },
+    {
+      "matches": ["https://myanimelist.net/*", "https://anilist.co/*"],
+      "js": ["scripts/animeswitcher-content.js"]
+    }
+  ]
+}
