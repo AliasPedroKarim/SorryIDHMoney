@@ -7,32 +7,113 @@
 // AniList, and adds a custom button to switch between the two platforms.
 
 let button = null;
+let style = null;
 
 function injectCSSAnimation(animationCSS) {
-  const style = document.createElement("style");
+  style = document.createElement("style");
   style.type = "text/css";
   style.appendChild(document.createTextNode(animationCSS));
 
   document.head.appendChild(style);
 }
 
-const animationCSS = `@keyframes buttonAnimation {
-      10%, 90% {
-          transform: translate3d(-1px, 0, 0);
-        }
-        
-        20%, 80% {
-          transform: translate3d(2px, 0, 0);
-        }
-      
-        30%, 50%, 70% {
-          transform: translate3d(-4px, 0, 0);
-        }
-      
-        40%, 60% {
-          transform: translate3d(4px, 0, 0);
-        }
-    }`;
+const listAnimations = [
+  `@keyframes buttonAnimation {
+    0% {
+      transform: scale(1);
+    }
+  
+    50% {
+      transform: scale(1.1);
+    }
+  
+    100% {
+      transform: scale(1);
+    }
+  }`,
+  `@keyframes buttonAnimation {
+    0% {
+      animation-timing-function: ease-in;
+      opacity: 0;
+      transform: translateY(-45px);
+    }
+  
+    16% {
+      opacity: .4;
+    }
+  
+    24% {
+      opacity: 1;
+    }
+  
+    40% {
+      animation-timing-function: ease-in;
+      transform: translateY(-24px);
+    }
+  
+    65% {
+      animation-timing-function: ease-in;
+      transform: translateY(-12px);
+    }
+  
+    82% {
+      animation-timing-function: ease-in;
+      transform: translateY(-6px);
+    }
+  
+    93% {
+      animation-timing-function: ease-in;
+      transform: translateY(-4px);
+    }
+  
+    25%,
+    55%,
+    75%,
+    87% {
+      animation-timing-function: ease-out;
+      transform: translateY(0px);
+    }
+  
+    100% {
+      animation-timing-function: ease-out;
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }`,
+  `@keyframes buttonAnimation {
+    0%,
+    100% {
+      transform: rotate(0deg);
+      transform-origin: 50% 50%;
+    }
+  
+    10% {
+      transform: rotate(8deg);
+    }
+  
+    20%,
+    40%,
+    60% {
+      transform: rotate(-10deg);
+    }
+  
+    30%,
+    50%,
+    70% {
+      transform: rotate(10deg);
+    }
+  
+    80% {
+      transform: rotate(-8deg);
+    }
+  
+    90% {
+      transform: rotate(8deg);
+    }
+  }`
+]
+
+const animationCSS = () => listAnimations[Math.floor(Math.random() * listAnimations.length)];
 
 async function getUrlAnilist(id, type) {
   if (isNaN(parseInt(id))) return null;
@@ -174,11 +255,18 @@ function addCustomButton(site, link) {
   });
 }
 
-navigation.addEventListener("navigate", (e) => {
+navigation.addEventListener('navigate', e => {
+  const targetUrl = new URL(e.destination.url);
+  const currentUrl = new URL(window.location.href);
+
+  if(currentUrl.hostname != targetUrl.hostname) return;
+
   if (button) button.remove();
+  if (style) style.remove();
+  injectCSSAnimation(animationCSS());
   animeSwitcher(e.destination.url);
 });
 
-injectCSSAnimation(animationCSS);
+injectCSSAnimation(animationCSS());
 
 animeSwitcher();

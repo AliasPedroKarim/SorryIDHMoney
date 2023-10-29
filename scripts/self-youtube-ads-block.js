@@ -23,6 +23,7 @@
         if (newUrl !== currentPageUrl) {
             const url = "https://www.youtube-nocookie.com/embed/" + splitUrl(newUrl) + "?autoplay=1";
             const player = document.getElementById("youtube-iframe");
+            if(!player) return;
             player.setAttribute('src', url);
         }
     });
