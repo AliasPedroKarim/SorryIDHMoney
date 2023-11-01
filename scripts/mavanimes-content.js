@@ -112,12 +112,15 @@ if (window.location.pathname === "/tous-les-animes-en-vostfr") {
 
   function addButtons(data) {
     if (data?.siteMalUrl) {
-      addCustomButton("myanimelist", data.siteMalUrl);
+      addCustomButton("myanimelist", data.siteMalUrl, {openInNewTab: true});
     }
 
     if (data?.siteUrl) {
       addCustomButton("anilist", data.siteUrl, {
-        left: `${20 * 2 + 50}px`,
+        styles: {
+          left: `${20 * 2 + 50}px`,
+        },
+        openInNewTab: true,
       });
     }
   }
