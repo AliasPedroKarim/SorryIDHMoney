@@ -1,13 +1,28 @@
 // by @AliasPedroKarim
-// The code adds a search bar to a webpage and filters a list of anime 
-// titles based on the user's input in real-time. It uses a function to find a 
+// The code adds a search bar to a webpage and filters a list of anime
+// titles based on the user's input in real-time. It uses a function to find a
 // case-insensitive substring in a string.
+
+const srcUtils = chrome.runtime.getURL("scripts/utils.js");
 
 function findCaseInsensitiveSubstring(sourceString, searchString) {
   const regex = new RegExp(searchString, "i");
   const matchResult = sourceString.match(regex);
 
   return matchResult ? matchResult[0] : null;
+}
+
+function extractEpisodeTitle(inputString) {
+  // Utilisez une expression régulière pour extraire le texte avant "Episode"
+  const match = inputString.match(/^(.*?)Episode/);
+
+  if (match && match[1]) {
+    // Si une correspondance est trouvée, retournez le texte avant "Episode"
+    return match[1].trim();
+  } else {
+    // Si aucune correspondance n'est trouvée, retournez la chaîne d'origine
+    return inputString.trim();
+  }
 }
 
 if (window.location.pathname === "/tous-les-animes-en-vostfr") {
@@ -88,3 +103,67 @@ if (window.location.pathname === "/tous-les-animes-en-vostfr") {
     });
   }
 }
+
+(async () => {
+  const { addCustomButton, animationCSS, injectCSSAnimation } = await import(
+    srcUtils
+  );
+  injectCSSAnimation(animationCSS());
+
+  function addButtons(data) {
+    if (data?.siteMalUrl) {
+      addCustomButton("myanimelist", data.siteMalUrl);
+    }
+
+    if (data?.siteUrl) {
+      addCustomButton("anilist", data.siteUrl, {
+        left: `${20 * 2 + 50}px`,
+      });
+    }
+  }
+
+  if (window.location.pathname?.endsWith("-vostfr")) {
+    const title = document.querySelector(".release .header h1.title");
+    if (!title) return;
+    const episodeTitle = extractEpisodeTitle(title.textContent).toLowerCase();
+
+    if (!episodeTitle) return;
+
+    chrome.runtime.sendMessage(
+      { action: "getAnilistMedia", search: episodeTitle },
+      function (response) {
+        if (!response) return;
+
+        addButtons(response);
+      }
+    );
+
+    // chrome.runtime.sendMessage(
+    //   { action: "getCachedDataByTerm", term: episodeTitle },
+    //   function (cachedData) {
+    //     if (!cachedData) return;
+
+    //     if (cachedData) {
+    //       addButtons(cachedData);
+    //     } else {
+    //       chrome.runtime.sendMessage(
+    //         { action: "getAnilistMedia", search: episodeTitle },
+    //         function (response) {
+    //           if (!response) return;
+
+    //           chrome.runtime.sendMessage({
+    //             action: "cacheData",
+    //             cacheKey: episodeTitle,
+    //             data: response,
+    //             expirationInSeconds: 86400,
+    //             terms: [episodeTitle],
+    //           });
+
+    //           addButtons(response);
+    //         }
+    //       );
+    //     }
+    //   }
+    // );
+  }
+})();
