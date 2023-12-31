@@ -42,6 +42,7 @@
         block.parentNode.removeChild(block);
         // get the url for the iframe
         const url = "https://www.youtube-nocookie.com/embed/" + splitUrl(window.location.href) + "?autoplay=1";
+        console.log("new url >", url);
         // get the mount point for the iframe
         const oldplayer = document.getElementById("error-screen");
         // create the iframe

@@ -7,7 +7,7 @@ export function addCustomButton(site, link, options = {}) {
 
   linkElement.href = link;
   linkElement.target = openInNewTab ? "_blank" : "_self";
-  linkElement.rel = "noopener noreferrer";
+  // linkElement.rel = "noopener noreferrer";
 
   Object.assign(linkElement.style, {
     backgroundColor: site === "anilist" ? "#19212d" : "#2e51a2",
@@ -25,6 +25,12 @@ export function addCustomButton(site, link, options = {}) {
     animation: "buttonLinkAnimation 2s ease infinite",
     overflow: "hidden",
     ...styles,
+  });
+  linkElement.addEventListener("click", (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    window.open(link, openInNewTab ? "_blank" : "_self");
   });
 
   document.body.appendChild(linkElement);

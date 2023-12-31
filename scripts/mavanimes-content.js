@@ -25,7 +25,24 @@ function extractEpisodeTitle(inputString) {
   }
 }
 
-if (window.location.pathname === "/tous-les-animes-en-vostfr") {
+function extractLinkList(inputString) {
+    // Utilisez une expression régulière pour extraire le texte avant "-episode"
+  const match = inputString.match(/^(.*?)-episode/);
+
+  if (match && match[1]) {
+    // Si une correspondance est trouvée, retournez le texte avant "Episode"
+    return match[1].trim();
+  } else {
+    // Si aucune correspondance n'est trouvée, retournez la chaîne d'origine
+    return inputString.trim();
+  }
+}
+
+if ([
+  "/tous-les-animes-en-vostfr",
+  "/films",
+  "/regarder-animes-oav-streaming"
+].includes(window.location.pathname)) {
   const landing = document.querySelector(".az-tabs");
 
   if (landing) {
@@ -168,5 +185,71 @@ if (window.location.pathname === "/tous-les-animes-en-vostfr") {
     //     }
     //   }
     // );
+  }
+})();
+
+(async () => {
+  if(window.location.pathname === "/") {
+    const animesGrid = document.querySelector(".animes-grid>.w-full:nth-child(2)");
+    if(!animesGrid) return;
+
+    const animeCards = animesGrid.querySelectorAll("a>img");
+    if(!animeCards?.length) return;
+
+    for(const animeCard of Array.from(animeCards)) {
+      const link = animeCard.parentElement.getAttribute("href");
+      if(!link) continue;
+
+      console.log(
+        "extractLinkList(link) ", extractLinkList(link)
+      );
+
+      const button = document.createElement("button");
+
+      Object.assign(button.style, {
+        position: "absolute",
+        top: `${animeCard?.height - (32 + 5)}px`,
+        right: "5px",
+        padding: "4px",
+        borderRadius: "50%",
+        backgroundColor: "#805ad5",
+        color: "#fff",
+        fontSize: "14px",
+        fontWeight: "bold",
+        textDecoration: "none",
+        zIndex: "1000",
+        width: "32px",
+        height: "32px",
+        opacity: "0.51",
+      });
+
+      button.addEventListener("mouseenter", (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        button.style.opacity = "1";
+      });
+
+      button.addEventListener("mouseleave", (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        button.style.opacity = "0.51";
+      });
+
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        window.open(extractLinkList(link), "_self");
+      });
+
+      button.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" style="overflow: unset; position: unset; display: unset; width: unset; height: unset; top: unset; left: unset; fill: none; background: unset; border-radius: unset; margin: unset;" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+      `;
+
+      animeCard.parentElement.style.position = "relative";
+      animeCard.parentElement.appendChild(button);
+    }
   }
 })();
