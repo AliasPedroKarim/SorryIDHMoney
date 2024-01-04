@@ -200,16 +200,12 @@ if ([
       const link = animeCard.parentElement.getAttribute("href");
       if(!link) continue;
 
-      console.log(
-        "extractLinkList(link) ", extractLinkList(link)
-      );
-
       const button = document.createElement("button");
 
       Object.assign(button.style, {
         position: "absolute",
-        top: `${animeCard?.height - (32 + 5)}px`,
-        right: "5px",
+        top: "5px",
+        left: "5px",
         padding: "4px",
         borderRadius: "50%",
         backgroundColor: "#805ad5",
