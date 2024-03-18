@@ -5,9 +5,9 @@ import {
   getCachedDataByTerm,
 } from "./scripts/cache.js";
 
-async function getAnilistMediaInfo(search) {
-  const query = `query ($search: String) {
-            Media(search: $search) {
+async function getAnilistMediaInfo(search, typePreference) {
+  const query = `query ($search: String, $typePreference: MediaType) {
+            Media(search: $search, type: $typePreference) {
                 id
                 idMal
                 siteUrl
@@ -16,6 +16,7 @@ async function getAnilistMediaInfo(search) {
         }`;
   const variables = {
     search,
+    typePreference,
   };
   const url = "https://graphql.anilist.co";
   const res = await fetch(url, {
@@ -49,7 +50,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case "getAnilistMedia":
       console.log("Received demand media from anilist: ", message);
       if (message.search) {
-        getAnilistMediaInfo(message.search).then((res) => {
+        getAnilistMediaInfo(message.search, message?.typePreference).then((res) => {
           sendResponse(res);
         });
       }

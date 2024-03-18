@@ -145,12 +145,16 @@ if ([
   if (window.location.pathname?.endsWith("-vostfr")) {
     const title = document.querySelector(".release .header h1.title");
     if (!title) return;
-    const episodeTitle = extractEpisodeTitle(title.textContent).toLowerCase();
+    const episodeTitleRaw = extractEpisodeTitle(title.textContent);
+    const episodeTitle = episodeTitleRaw.toLowerCase();
 
     if (!episodeTitle) return;
+    
+    // Rewrite the episode title in title page, split by "|" and replace the first part with the episode title
+    document.title = `${title.textContent} | ${document.title?.split("|")[1]}`;
 
     chrome.runtime.sendMessage(
-      { action: "getAnilistMedia", search: episodeTitle },
+      { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
       function (response) {
         if (!response) return;
 
