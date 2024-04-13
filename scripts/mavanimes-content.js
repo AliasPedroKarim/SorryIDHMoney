@@ -26,7 +26,7 @@ function extractEpisodeTitle(inputString) {
 }
 
 function extractLinkList(inputString) {
-    // Utilisez une expression régulière pour extraire le texte avant "-episode"
+  // Utilisez une expression régulière pour extraire le texte avant "-episode"
   const match = inputString.match(/^(.*?)-episode/);
 
   if (match && match[1]) {
@@ -129,7 +129,7 @@ if ([
 
   function addButtons(data) {
     if (data?.siteMalUrl) {
-      addCustomButton("myanimelist", data.siteMalUrl, {openInNewTab: true});
+      addCustomButton("myanimelist", data.siteMalUrl, { openInNewTab: true });
     }
 
     if (data?.siteUrl) {
@@ -149,9 +149,11 @@ if ([
     const episodeTitle = episodeTitleRaw.toLowerCase();
 
     if (!episodeTitle) return;
-    
+
     // Rewrite the episode title in title page, split by "|" and replace the first part with the episode title
     document.title = `${title.textContent} | ${document.title?.split("|")[1]}`;
+
+    checkPreviousAndNext();
 
     chrome.runtime.sendMessage(
       { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
@@ -193,16 +195,16 @@ if ([
 })();
 
 (async () => {
-  if(window.location.pathname === "/") {
+  if (window.location.pathname === "/") {
     const animesGrid = document.querySelector(".animes-grid>.w-full:nth-child(2)");
-    if(!animesGrid) return;
+    if (!animesGrid) return;
 
     const animeCards = animesGrid.querySelectorAll("a>img");
-    if(!animeCards?.length) return;
+    if (!animeCards?.length) return;
 
-    for(const animeCard of Array.from(animeCards)) {
+    for (const animeCard of Array.from(animeCards)) {
       const link = animeCard.parentElement.getAttribute("href");
-      if(!link) continue;
+      if (!link) continue;
 
       const button = document.createElement("button");
 
@@ -240,7 +242,7 @@ if ([
       button.addEventListener("click", (e) => {
         e.stopPropagation();
         e.preventDefault();
-        
+
         window.open(extractLinkList(link), "_self");
       });
 
@@ -253,3 +255,86 @@ if ([
     }
   }
 })();
+
+// Fonction pour extraire le numéro d'épisode à partir de l'URL
+function extractEpisodeNumber(url) {
+  const match = url.match(/episode-(\d+)/i);
+  if (match && match[1]) {
+    return parseInt(match[1]);
+  } else {
+    throw new Error('Impossible d\'extraire le numéro d\'épisode depuis l\'URL actuelle.');
+  }
+}
+
+// Fonction pour vérifier si une page existe et si elle est une redirection permanente (code 301)
+async function checkPageExists(url) {
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      return true;
+    } else if (response.status === 301) {
+      // Redirection permanente, donc la page n'existe pas
+      return false;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
+
+// Fonction pour créer un bouton et appliquer le style en JavaScript
+function createButton(icon, position) {
+  const button = document.createElement('a');
+  button.innerHTML = `<span></span>`;
+  document.body.appendChild(button);
+
+  // Appliquer le style directement
+  button.style.position = 'fixed';
+  button.style.top = '50%';
+  button.style.transform = 'translateY(-50%)';
+  button.style.width = '50px';
+  button.style.height = '50px';
+  button.style.backgroundColor = '#6b46c1';
+  button.style.borderRadius = '8px';
+  button.style.textAlign = 'center';
+  button.style.lineHeight = '50px';
+  button.style.fontSize = '24px';
+  button.style.cursor = 'pointer';
+  button.style[`${position === 'left' ? 'left' : 'right'}`] = '20px'; // Utilisation de [ ] pour utiliser une variable comme nom de propriété
+
+  // Création de l'icône
+  const span = document.createElement('span');
+  span.innerHTML = icon === 'prev-icon' ? '◄' : '►';
+  span.style.display = 'inline-block';
+  span.style.fontFamily = 'Arial';
+  button.appendChild(span);
+
+  return button;
+}
+
+// Fonction principale
+async function checkPreviousAndNext() {
+  const currentUrl = window.location.href;
+  const episodeNumber = extractEpisodeNumber(currentUrl);
+
+  // Vérifier si l'épisode précédent existe
+  const prevEpisodeUrl = currentUrl.replace(`episode-${(String(episodeNumber)).padStart(2, '0')}`, `episode-${(String(episodeNumber - 1)).padStart(2, '0')}`);
+  const prevEpisodeExists = await checkPageExists(prevEpisodeUrl);
+
+  // Créer le bouton précédent s'il existe
+  if (prevEpisodeExists) {
+    const prevButton = createButton('prev-icon', 'left');
+    prevButton.href = prevEpisodeUrl;
+  }
+
+  // Vérifier si l'épisode suivant existe
+  const nextEpisodeUrl = currentUrl.replace(`episode-${(String(episodeNumber)).padStart(2, '0')}`, `episode-${(String(episodeNumber + 1)).padStart(2, '0')}`);
+  const nextEpisodeExists = await checkPageExists(nextEpisodeUrl);
+
+  // Créer le bouton suivant s'il existe
+  if (nextEpisodeExists) {
+    const nextButton = createButton('next-icon', 'right');
+    nextButton.href = nextEpisodeUrl;
+  }
+}
