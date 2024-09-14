@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration de l'extension</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paramètres de l'extension</h1>
+
+  <form id="settings-form">
+    <label for="background-color">Couleur de fond :</label>
+    <input type="color" id="background-color" name="background-color" value="#ffffff">
+
+    <label for="theme">Choisir un thème :</label>
+    <select id="theme" name="theme">
+      <option value="light">Clair</option>
+      <option value="dark">Sombre</option>
+    </select>
+
+    <button type="submit">Sauvegarder</button>
+  </form>
+
+  <script src="options.js"></script>
+</body>
+</html>

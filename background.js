@@ -42,6 +42,8 @@ async function getAnilistMediaInfo(search, typePreference) {
     : null;
 }
 
+// Listen for messages from the content script
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.action) {
     case "disableConsoleClear":

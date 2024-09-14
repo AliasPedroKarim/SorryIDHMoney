@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Extension</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      width: 250px;
+    }
+    h1 {
+      font-size: 18px;
+    }
+    p {
+      margin: 5px 0;
+    }
+    .settings-link {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="extension-name">Nom de l'extension</h1>
+  <p>Version : <span id="extension-version">1.0</span></p>
+  <p id="additional-info"></p>
+
+  <a href="options.html" class="settings-link">Configurer l'extension</a>
+
+  <script src="popup.js"></script>
+</body>
+</html>

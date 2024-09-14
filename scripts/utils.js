@@ -5,6 +5,8 @@ export function addCustomButton(site, link, options = {}) {
   const { openInNewTab = false, styles = {} } = options;
   linkElement = document.createElement("a");
 
+  linkElement.classList.add("custom-button");
+
   linkElement.href = link;
   linkElement.target = openInNewTab ? "_blank" : "_self";
   // linkElement.rel = "noopener noreferrer";
@@ -22,7 +24,7 @@ export function addCustomButton(site, link, options = {}) {
     bottom: "20px",
     left: "20px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-    animation: "buttonLinkAnimation 2s ease infinite",
+    // animation: "buttonLinkAnimation 2s ease infinite",
     overflow: "hidden",
     ...styles,
   });
@@ -147,7 +149,14 @@ const listAnimations = [
 ];
 
 export const animationCSS = () =>
-  listAnimations[Math.floor(Math.random() * listAnimations.length)];
+  listAnimations[Math.floor(Math.random() * listAnimations.length)] +  `
+    .custom-button {
+      animation: buttonLinkAnimation 2s ease infinite;
+    }
+    .custom-button:hover {
+      animation: none;
+    }
+`;
 
 export function resetButton() {
   if (linkElement) {

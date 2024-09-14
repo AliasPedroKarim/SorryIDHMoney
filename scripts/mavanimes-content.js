@@ -155,6 +155,8 @@ if ([
 
     checkPreviousAndNext();
 
+    setupButtonAdvanceVideo();
+
     chrome.runtime.sendMessage(
       { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
       function (response) {
@@ -283,7 +285,7 @@ async function checkPageExists(url) {
   }
 }
 
-// Fonction pour créer un bouton et appliquer le style en JavaScript
+/* // Fonction pour créer un bouton et appliquer le style en JavaScript
 function createButton(icon, position) {
   const button = document.createElement('a');
   button.innerHTML = `<span></span>`;
@@ -311,6 +313,48 @@ function createButton(icon, position) {
   button.appendChild(span);
 
   return button;
+} */
+
+function createGenericButton(iconHTML, styles) {
+  const button = document.createElement('a');
+  document.body.appendChild(button);
+
+  // Appliquer les styles spécifiés dans l'objet `styles`
+  Object.assign(button.style, {
+    width: '50px',
+    height: '50px',
+    borderRadius: '8px',
+    textAlign: 'center',
+    lineHeight: '50px',
+    fontSize: '24px',
+    cursor: 'pointer',
+    ...styles,
+  });
+
+  // Ajouter l'icône HTML
+  button.innerHTML = iconHTML;  // L'icône peut être passée en tant que HTML
+
+  return button;
+}
+
+
+function createButtonWithPosition(position) {
+  // Définir l'icône en fonction de la position (flèche gauche ou droite)
+  const iconHTML = position === 'left' ? '<span>◄</span>' : '<span>►</span>';
+
+  // Styles de base pour le bouton
+  const baseStyles = {
+    position: 'fixed',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    backgroundColor: '#6b46c1',
+  };
+
+  // Ajouter la position (gauche ou droite)
+  baseStyles[position === 'left' ? 'left' : 'right'] = '20px';
+
+  // Utilisation de la fonction générique pour créer le bouton avec icône et styles
+  return createGenericButton(iconHTML, baseStyles);
 }
 
 // Fonction principale
@@ -324,7 +368,7 @@ async function checkPreviousAndNext() {
 
   // Créer le bouton précédent s'il existe
   if (prevEpisodeExists) {
-    const prevButton = createButton('prev-icon', 'left');
+    const prevButton = createButtonWithPosition('left');
     prevButton.href = prevEpisodeUrl;
   }
 
@@ -334,7 +378,101 @@ async function checkPreviousAndNext() {
 
   // Créer le bouton suivant s'il existe
   if (nextEpisodeExists) {
-    const nextButton = createButton('next-icon', 'right');
+    const nextButton = createButtonWithPosition('right');
     nextButton.href = nextEpisodeUrl;
   }
 }
+
+let activeVideo = null; // Variable pour stocker la vidéo actuellement en cours de lecture
+
+// Fonction pour avancer la vidéo active de X secondes
+// async function setupButtonAdvanceVideo() {
+
+//   // Fonction pour avancer la vidéo active de X secondes
+//   function advanceActiveVideo(seconds) {
+//     if (activeVideo) {
+//       activeVideo.currentTime += seconds; // Avance de X secondes
+//       console.log(`Vidéo avancée de ${seconds} secondes`);
+//     } else {
+//       console.log("Aucune vidéo active trouvée.");
+//     }
+//   }
+  
+//   // Fonction pour attacher les événements 'playing' et 'pause' à une vidéo
+//   function attachVideoEvents(video) {
+//     video.addEventListener('playing', function () {
+//       activeVideo = video;
+//       console.log("Vidéo active détectée.");
+//     });
+  
+//     video.addEventListener('pause', function () {
+//       if (activeVideo === video) {
+//         activeVideo = null;
+//         console.log("Vidéo mise en pause, plus de vidéo active.");
+//       }
+//     });
+//   }
+  
+//   // Fonction pour détecter les vidéos présentes et leur attacher des événements
+//   function detectActiveVideo() {
+//     const videos = document.querySelectorAll('video');
+//     console.log(`Détecté ${videos.length} vidéo(s) sur la page.`, videos);
+  
+//     for (let video of videos) {
+//       if (!video.dataset.eventsAttached) { // Vérifie si les événements sont déjà attachés
+//         attachVideoEvents(video);
+//         video.dataset.eventsAttached = true; // Marque la vidéo comme ayant les événements attachés
+//       }
+//     }
+//   }
+  
+//   // Observer les modifications dans le DOM pour détecter de nouvelles vidéos
+//   const observer = new MutationObserver((mutations) => {
+//     mutations.forEach((mutation) => {
+//       console.log(
+//         `Mutation de type '${mutation.type}' détectée, ${mutation.addedNodes.length} nœud(s) ajouté(s).`
+//       );
+      
+//       if (mutation.addedNodes.length > 0) {
+//         for (let node of mutation.addedNodes) {
+//           if (node.tagName === 'VIDEO') {
+//             console.log('Nouvelle vidéo détectée, événements attachés.');
+//             attachVideoEvents(node); // Attache les événements à la nouvelle vidéo
+//           }
+//         }
+//       }
+//     });
+//   });
+  
+//   // Options de l'observateur : observe les enfants et les sous-arbres pour les ajouts de nœuds
+//   observer.observe(document.body, { childList: true, subtree: true });
+  
+//   // Initialiser la détection des vidéos existantes sur la page
+//   detectActiveVideo();
+
+
+
+
+
+
+//   const advanceButton = createGenericButton('<span>⏩</span>', {
+//     position: 'fixed',
+//     bottom: '20px',
+//     right: '20px',
+//     backgroundColor: '#805ad5',
+//     color: '#fff',
+//   });
+
+//   advanceButton.addEventListener('click', () => {
+//     /* chrome.runtime.sendMessage({ action: "advanceActiveVideo", time: 80 }, function(response) {
+//       if (response.status === 'success') {
+//         console.log(response.message);
+//       } else {
+//         console.log('Erreur lors de l\'avancement de la vidéo.');
+//       }
+//     }); */
+    
+//     advanceActiveVideo(80);
+//   });
+// }
+
