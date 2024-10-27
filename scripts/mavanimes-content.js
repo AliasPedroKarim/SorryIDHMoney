@@ -127,6 +127,9 @@ if ([
   );
   injectCSSAnimation(animationCSS());
 
+  // replace de href par "/" du premier élément (#menu-items li a) sur toute les pages
+  document?.querySelectorAll("#menu-items li a")[0]?.setAttribute("href", "/");
+
   function addButtons(data) {
     if (data?.siteMalUrl) {
       addCustomButton("myanimelist", data.siteMalUrl, { openInNewTab: true });
@@ -154,8 +157,9 @@ if ([
     document.title = `${title.textContent} | ${document.title?.split("|")[1]}`;
 
     checkPreviousAndNext();
+    addBackToListButton();
 
-    setupButtonAdvanceVideo();
+    // setupButtonAdvanceVideo();
 
     chrome.runtime.sendMessage(
       { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
@@ -381,6 +385,20 @@ async function checkPreviousAndNext() {
     const nextButton = createButtonWithPosition('right');
     nextButton.href = nextEpisodeUrl;
   }
+}
+
+// Ajouter un button qui permet de revenir la liste des épisodes d'un anime
+function addBackToListButton() {
+  const button = createGenericButton('<span>📋</span>', {
+    position: 'fixed',
+    top: '63px',
+    left: '20px',
+    backgroundColor: '#805ad5',
+    color: '#fff',
+  });
+  
+  // extractLinkList(link) permet de récupérer le lien de la liste des épisodes
+  button.href = extractLinkList(window.location.href);
 }
 
 let activeVideo = null; // Variable pour stocker la vidéo actuellement en cours de lecture
