@@ -1,28 +1,59 @@
-// Sauvegarde des options
-function saveOptions(event) {
-    event.preventDefault();
-
-    const backgroundColor = document.getElementById('background-color').value;
-    const theme = document.getElementById('theme').value;
-
-    chrome.storage.sync.set({
-        backgroundColor: backgroundColor,
-        theme: theme
-    }, function () {
-        alert('Les paramètres ont été sauvegardés');
-    });
-}
-
 // Chargement des options sauvegardées
 function restoreOptions() {
     chrome.storage.sync.get({
-        backgroundColor: '#ffffff', // Valeur par défaut
-        theme: 'light'              // Valeur par défaut
+        backgroundColor: '#ffffff',
+        theme: 'light',
+        censure: true,
+        enableMal: true,
+        enableAnilist: true
     }, function (items) {
         document.getElementById('background-color').value = items.backgroundColor;
         document.getElementById('theme').value = items.theme;
+        document.getElementById('censure').checked = items.censure;
+        document.getElementById('enable-mal').checked = items.enableMal;
+        document.getElementById('enable-anilist').checked = items.enableAnilist;
     });
 }
 
+// Écouteurs d'événements pour les changements
+document.getElementById('background-color').addEventListener('input', function(e) {
+    chrome.storage.sync.set({ backgroundColor: e.target.value });
+});
+
+document.getElementById('theme').addEventListener('change', function(e) {
+    chrome.storage.sync.set({ theme: e.target.value });
+});
+
+document.getElementById('censure').addEventListener('change', function(e) {
+    chrome.storage.sync.set({ censure: e.target.checked });
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            action: "updateCensure",
+            censure: e.target.checked
+        });
+    });
+});
+
+document.getElementById('enable-mal').addEventListener('change', function(e) {
+    chrome.storage.sync.set({ enableMal: e.target.checked });
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            action: "updateAnimeSwitcher",
+            type: "mal",
+            enabled: e.target.checked
+        });
+    });
+});
+
+document.getElementById('enable-anilist').addEventListener('change', function(e) {
+    chrome.storage.sync.set({ enableAnilist: e.target.checked });
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            action: "updateAnimeSwitcher",
+            type: "anilist",
+            enabled: e.target.checked
+        });
+    });
+});
+
 document.addEventListener('DOMContentLoaded', restoreOptions);
-document.getElementById('settings-form').addEventListener('submit', saveOptions);

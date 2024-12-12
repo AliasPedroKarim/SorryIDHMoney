@@ -4,31 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mon Extension</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 10px;
-      width: 250px;
-    }
-    h1 {
-      font-size: 18px;
-    }
-    p {
-      margin: 5px 0;
-    }
-    .settings-link {
-      display: block;
-      margin-top: 10px;
-      text-align: center;
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/popup.css">
 </head>
 <body>
-  <h1 id="extension-name">Nom de l'extension</h1>
-  <p>Version : <span id="extension-version">1.0</span></p>
-  <p id="additional-info"></p>
+  <div class="popup-container">
+    <h1 id="extension-name">Nom de l'extension</h1>
+    
+    <div class="info-item">
+      <span class="info-label">Version :</span>
+      <span id="extension-version">1.0</span>
+    </div>
+    
+    <p id="additional-info"></p>
 
-  <a href="options.html" class="settings-link">Configurer l'extension</a>
+    <a href="options.html" class="settings-link">
+      ⚙️ Configurer l'extension
+    </a>
+  </div>
 
   <script src="popup.js"></script>
 </body>

@@ -8,6 +8,40 @@
 
 const srcUtils = chrome.runtime.getURL("scripts/utils.js");
 
+let enableMal = true;
+let enableAnilist = true;
+
+let buttonMal = null;
+let buttonAnilist = null;
+
+chrome.storage.sync.get({
+    enableMal: true,
+    enableAnilist: true
+}, function (items) {
+    enableMal = items.enableMal;
+    enableAnilist = items.enableAnilist;
+
+
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "updateAnimeSwitcher") {
+        if (request.type === "mal") {
+            enableMal = request.enabled;
+        } else if (request.type === "anilist") {
+            enableAnilist = request.enabled;
+        }
+        
+        resetButton();
+        buttonMal?.remove();
+        buttonAnilist?.remove();
+        buttonMal = null;
+        buttonAnilist = null;
+
+        animeSwitcher(window.location.href);
+    }
+});
+
 (async () => {
   const { addCustomButton, animationCSS, injectCSSAnimation, resetButton } = await import(
     srcUtils
@@ -98,19 +132,19 @@ const srcUtils = chrome.runtime.getURL("scripts/utils.js");
 
     switch (currentHostname) {
       case "myanimelist.net":
-        if (["anime", "manga"].includes(type) && id) {
+        if (["anime", "manga"].includes(type) && id && enableAnilist) {
           getUrlAnilist(id, type.toUpperCase()).then((url) => {
             if (!url) return;
-            addCustomButton("anilist", url);
+            buttonAnilist = addCustomButton("anilist", url);
           });
         }
 
         break;
       case "anilist.co":
-        if (["anime", "manga"].includes(type) && id) {
+        if (["anime", "manga"].includes(type) && id && enableMal) {
           getUrlMal(id, type.toUpperCase()).then((url) => {
             if (!url) return;
-            addCustomButton("myanimelist", url);
+            buttonMal = addCustomButton("myanimelist", url);
           });
         }
         break;
@@ -127,6 +161,10 @@ const srcUtils = chrome.runtime.getURL("scripts/utils.js");
     if (currentUrl.hostname != targetUrl.hostname) return;
 
     resetButton();
+    buttonMal?.remove();
+    buttonMal = null;
+    buttonAnilist?.remove();
+    buttonAnilist = null;
     animeSwitcher(e.destination.url);
   });
 

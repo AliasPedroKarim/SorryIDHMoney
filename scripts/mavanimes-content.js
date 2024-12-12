@@ -13,29 +13,50 @@ function findCaseInsensitiveSubstring(sourceString, searchString) {
 }
 
 function extractEpisodeTitle(inputString) {
-  // Utilisez une expression régulière pour extraire le texte avant "Episode"
-  const match = inputString.match(/^(.*?)Episode/);
+  // Utilisez une expression régulière pour extraire le texte avant "Episode" ou "Film"
+  const match = inputString.match(/^(.*?)(Episode|Film)/);
+  
+  let result = "";
 
   if (match && match[1]) {
     // Si une correspondance est trouvée, retournez le texte avant "Episode"
-    return match[1].trim();
+    result = match[1].trim();
   } else {
     // Si aucune correspondance n'est trouvée, retournez la chaîne d'origine
-    return inputString.trim();
+    result = inputString.trim();
   }
+
+  // is Gekijouban ?
+  const isGekijouban = inputString.includes("Gekijouban");
+
+  if (isGekijouban) {
+    result = result.replace("Gekijouban", "").trim();
+  }
+
+  return result;
 }
 
 function extractLinkList(inputString) {
-  // Utilisez une expression régulière pour extraire le texte avant "-episode"
-  const match = inputString.match(/^(.*?)-episode/);
+  // Utilisez une expression régulière pour extraire le texte avant "-episode" ou "-film"
+  const match = inputString.match(/^(.*?)(?:-episode|-film)/);
 
+  let result = "";
   if (match && match[1]) {
     // Si une correspondance est trouvée, retournez le texte avant "Episode"
-    return match[1].trim();
+    result = match[1].trim();
   } else {
     // Si aucune correspondance n'est trouvée, retournez la chaîne d'origine
-    return inputString.trim();
+    result = inputString.trim();
   }
+
+  // is Gekijouban ?
+  const isGekijouban = result.includes("gekijouban-");
+
+  if (isGekijouban) {
+    result = result.replace("gekijouban-", "").trim();
+  }
+
+  return result;
 }
 
 if ([
@@ -262,13 +283,17 @@ if ([
   }
 })();
 
-// Fonction pour extraire le numéro d'épisode à partir de l'URL
+// Fonction pour extraire le numéro d'épisode (episode-01) ou de film (film-01) à partir de l'URL
 function extractEpisodeNumber(url) {
-  const match = url.match(/episode-(\d+)/i);
-  if (match && match[1]) {
-    return parseInt(match[1]);
+  const matchEpisode = url.match(/episode-(\d+)/i);
+  const matchFilm = url.match(/film-(\d+)/i);
+  
+  if (matchEpisode && matchEpisode[1]) {
+    return parseInt(matchEpisode[1]);
+  } else if (matchFilm && matchFilm[1]) {
+    return parseInt(matchFilm[1]);
   } else {
-    throw new Error('Impossible d\'extraire le numéro d\'épisode depuis l\'URL actuelle.');
+    throw new Error('Impossible d\'extraire le numéro d\'épisode ou de film depuis l\'URL actuelle.');
   }
 }
 

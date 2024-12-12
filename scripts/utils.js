@@ -42,6 +42,8 @@ export function addCustomButton(site, link, options = {}) {
   } else if (site === "anilist") {
     linkElement.innerHTML = `<img src="https://anilist.co/img/icons/icon.svg" style="width:100%;height:100%;" alt="AniList Logo" />`;
   }
+
+  return linkElement;
 }
 
 export function injectCSSAnimation(animationCSS) {
