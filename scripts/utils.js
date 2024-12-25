@@ -3,16 +3,18 @@ let style = null;
 
 export function addCustomButton(site, link, options = {}) {
   const { openInNewTab = false, styles = {} } = options;
+  const shortcutKey = site === "myanimelist" ? 'M' : 'A'; // M pour MAL, A pour AniList
+  
   linkElement = document.createElement("a");
-
   linkElement.classList.add("custom-button");
-
   linkElement.href = link;
   linkElement.target = openInNewTab ? "_blank" : "_self";
-  // linkElement.rel = "noopener noreferrer";
+
+  const baseColor = site === "anilist" ? "#19212d" : "#2e51a2";
+  const hoverColor = site === "anilist" ? "#2c3a4f" : "#4169cc";
 
   Object.assign(linkElement.style, {
-    backgroundColor: site === "anilist" ? "#19212d" : "#2e51a2",
+    backgroundColor: baseColor,
     color: "#ffffff",
     width: "50px",
     height: "50px",
@@ -24,14 +26,24 @@ export function addCustomButton(site, link, options = {}) {
     bottom: "20px",
     left: "20px",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-    // animation: "buttonLinkAnimation 2s ease infinite",
     overflow: "hidden",
+    transition: 'background-color 0.2s',
     ...styles,
   });
+
+  // Ajout du tooltip pour le raccourci
+  linkElement.addEventListener('mouseenter', () => {
+    linkElement.setAttribute('title', `Raccourci: Ctrl + ${shortcutKey}`);
+    linkElement.style.backgroundColor = hoverColor;
+  });
+
+  linkElement.addEventListener('mouseleave', () => {
+    linkElement.style.backgroundColor = baseColor;
+  });
+
   linkElement.addEventListener("click", (e) => {
     e.stopPropagation();
     e.preventDefault();
-    
     window.open(link, openInNewTab ? "_blank" : "_self");
   });
 
@@ -42,6 +54,14 @@ export function addCustomButton(site, link, options = {}) {
   } else if (site === "anilist") {
     linkElement.innerHTML = `<img src="https://anilist.co/img/icons/icon.svg" style="width:100%;height:100%;" alt="AniList Logo" />`;
   }
+
+  // Ajout des raccourcis clavier
+  document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key.toLowerCase() === shortcutKey.toLowerCase()) {
+      event.preventDefault();
+      window.open(link, openInNewTab ? "_blank" : "_self");
+    }
+  });
 
   return linkElement;
 }
