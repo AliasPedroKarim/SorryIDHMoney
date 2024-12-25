@@ -348,7 +348,7 @@ function createGenericButton(iconHTML, styles) {
   const button = document.createElement('a');
   document.body.appendChild(button);
 
-  // Appliquer les styles spécifiés dans l'objet `styles`
+  // Appliquer les styles de base
   Object.assign(button.style, {
     width: '50px',
     height: '50px',
@@ -357,47 +357,89 @@ function createGenericButton(iconHTML, styles) {
     lineHeight: '50px',
     fontSize: '24px',
     cursor: 'pointer',
+    transition: 'background-color 0.2s',
     ...styles,
   });
 
-  // Ajouter l'icône HTML
-  button.innerHTML = iconHTML;  // L'icône peut être passée en tant que HTML
+  // Ajouter l'effet de hover
+  button.addEventListener('mouseenter', () => {
+    button.style.backgroundColor = '#805ad5'; // Couleur plus claire au hover
+  });
+
+  button.addEventListener('mouseleave', () => {
+    button.style.backgroundColor = '#6b46c1'; // Retour à la couleur normale
+  });
+
+  button.innerHTML = iconHTML;
 
   return button;
 }
 
 
 function createButtonWithPosition(position) {
-  // Définir l'icône en fonction de la position (flèche gauche ou droite)
   const iconHTML = position === 'left' ? '<span>◄</span>' : '<span>►</span>';
+  const shortcutText = position === 'left' ? 'Ctrl + ←' : 'Ctrl + →';
 
-  // Styles de base pour le bouton
   const baseStyles = {
     position: 'fixed',
     top: '50%',
     transform: 'translateY(-50%)',
     backgroundColor: '#6b46c1',
+    // Ajout des styles pour le tooltip
+    '::before': {
+      content: `"${shortcutText}"`,
+      position: 'absolute',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      color: 'white',
+      padding: '5px',
+      borderRadius: '4px',
+      fontSize: '12px',
+      whiteSpace: 'nowrap',
+      opacity: '0',
+      transition: 'opacity 0.2s',
+      pointerEvents: 'none',
+    }
   };
 
-  // Ajouter la position (gauche ou droite)
   baseStyles[position === 'left' ? 'left' : 'right'] = '20px';
 
-  // Utilisation de la fonction générique pour créer le bouton avec icône et styles
-  return createGenericButton(iconHTML, baseStyles);
+  const button = createGenericButton(iconHTML, baseStyles);
+
+  // Ajout des styles pour le hover du tooltip
+  button.addEventListener('mouseenter', () => {
+    button.setAttribute('title', `Raccourci: ${shortcutText}`);
+  });
+
+  return button;
 }
 
-// Fonction principale
+// Fonction pour gérer les raccourcis clavier
+function handleKeyboardShortcuts(event, prevButton, nextButton) {
+  if (event.ctrlKey) {
+    if (event.key === 'ArrowLeft' && prevButton) {
+      event.preventDefault();
+      window.location.href = prevButton.href;
+    } else if (event.key === 'ArrowRight' && nextButton) {
+      event.preventDefault();
+      window.location.href = nextButton.href;
+    }
+  }
+}
+
+// Modification de la fonction checkPreviousAndNext
 async function checkPreviousAndNext() {
   const currentUrl = window.location.href;
   const episodeNumber = extractEpisodeNumber(currentUrl);
+
+  let prevButton = null;
+  let nextButton = null;
 
   // Vérifier si l'épisode précédent existe
   const prevEpisodeUrl = currentUrl.replace(`episode-${(String(episodeNumber)).padStart(2, '0')}`, `episode-${(String(episodeNumber - 1)).padStart(2, '0')}`);
   const prevEpisodeExists = await checkPageExists(prevEpisodeUrl);
 
-  // Créer le bouton précédent s'il existe
   if (prevEpisodeExists) {
-    const prevButton = createButtonWithPosition('left');
+    prevButton = createButtonWithPosition('left');
     prevButton.href = prevEpisodeUrl;
   }
 
@@ -405,11 +447,13 @@ async function checkPreviousAndNext() {
   const nextEpisodeUrl = currentUrl.replace(`episode-${(String(episodeNumber)).padStart(2, '0')}`, `episode-${(String(episodeNumber + 1)).padStart(2, '0')}`);
   const nextEpisodeExists = await checkPageExists(nextEpisodeUrl);
 
-  // Créer le bouton suivant s'il existe
   if (nextEpisodeExists) {
-    const nextButton = createButtonWithPosition('right');
+    nextButton = createButtonWithPosition('right');
     nextButton.href = nextEpisodeUrl;
   }
+
+  // Ajout des écouteurs d'événements pour les raccourcis clavier
+  document.addEventListener('keydown', (event) => handleKeyboardShortcuts(event, prevButton, nextButton));
 }
 
 // Ajouter un button qui permet de revenir la liste des épisodes d'un anime
@@ -422,8 +466,20 @@ function addBackToListButton() {
     color: '#fff',
   });
   
-  // extractLinkList(link) permet de récupérer le lien de la liste des épisodes
+  // Ajout du tooltip pour le raccourci
+  button.addEventListener('mouseenter', () => {
+    button.setAttribute('title', 'Raccourci: Ctrl + L');
+  });
+  
   button.href = extractLinkList(window.location.href);
+
+  // Ajout du raccourci clavier Ctrl + L pour la liste des épisodes
+  document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key.toLowerCase() === 'l') {
+      event.preventDefault();
+      window.location.href = button.href;
+    }
+  });
 }
 
 let activeVideo = null; // Variable pour stocker la vidéo actuellement en cours de lecture
