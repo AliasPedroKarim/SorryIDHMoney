@@ -13,7 +13,7 @@ const srcUtils = chrome.runtime.getURL("scripts/utils.js");
 
   function addButtons(data) {
     if (data?.siteMalUrl) {
-      addCustomButton("myanimelist", data.siteMalUrl, {openInNewTab: true});
+      addCustomButton("myanimelist", data.siteMalUrl, { openInNewTab: true });
     }
 
     if (data?.siteUrl) {
@@ -32,9 +32,9 @@ const srcUtils = chrome.runtime.getURL("scripts/utils.js");
     // .entry-header_wrap ol.breadcrumb li (second element) a
     const title = document.querySelector(".entry-header_wrap ol.breadcrumb li:nth-child(2) a");
     if (!title) return;
-    const episodeTitle = title?.textContent?.toLowerCase();
+    const episodeTitle = title?.textContent?.toLowerCase()?.trim();
     if (!episodeTitle) return;
-    
+
     chrome.runtime.sendMessage(
       { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
       function (response) {
