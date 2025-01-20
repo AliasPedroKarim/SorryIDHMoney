@@ -53,6 +53,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.log("Received demand media from anilist: ", message);
       if (message.search) {
         getAnilistMediaInfo(message.search, message?.typePreference).then((res) => {
+          console.log("And the response is: ", res);
           sendResponse(res);
         });
       }

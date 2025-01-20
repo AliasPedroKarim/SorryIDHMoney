@@ -15,31 +15,31 @@ let buttonMal = null;
 let buttonAnilist = null;
 
 chrome.storage.sync.get({
-    enableMal: true,
-    enableAnilist: true
+  enableMal: true,
+  enableAnilist: true
 }, function (items) {
-    enableMal = items.enableMal;
-    enableAnilist = items.enableAnilist;
+  enableMal = items.enableMal;
+  enableAnilist = items.enableAnilist;
 
 
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "updateAnimeSwitcher") {
-        if (request.type === "mal") {
-            enableMal = request.enabled;
-        } else if (request.type === "anilist") {
-            enableAnilist = request.enabled;
-        }
-        
-        resetButton();
-        buttonMal?.remove();
-        buttonAnilist?.remove();
-        buttonMal = null;
-        buttonAnilist = null;
-
-        animeSwitcher(window.location.href);
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "updateAnimeSwitcher") {
+    if (request.type === "mal") {
+      enableMal = request.enabled;
+    } else if (request.type === "anilist") {
+      enableAnilist = request.enabled;
     }
+
+    resetButton();
+    buttonMal?.remove();
+    buttonAnilist?.remove();
+    buttonMal = null;
+    buttonAnilist = null;
+
+    animeSwitcher(window.location.href);
+  }
 });
 
 (async () => {
@@ -125,6 +125,29 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return { type: null, id: null };
   }
 
+  // async function getMediaInfoByTitle(title, type) {
+  //   return new Promise((resolve) => {
+  //     chrome.runtime.sendMessage({
+  //       action: "getAnilistMedia",
+  //       search: title,
+  //       typePreference: type.toUpperCase()
+  //     }, (response) => {
+  //       resolve(response);
+  //     });
+  //   });
+  // }
+
+  function extractNautiljonInfo() {
+    const titleElement = document.querySelector(".h1titre > span");
+    if (!titleElement) return null;
+
+    const title = titleElement.innerText.trim();
+    const path = window.location.pathname;
+    const type = path.includes('/animes/') ? 'anime' : path.includes('/mangas/') ? 'manga' : null;
+
+    return { title, type };
+  }
+
   function animeSwitcher(url) {
     const currentUrl = new URL(url || window.location.href);
     const currentHostname = currentUrl.hostname;
@@ -148,25 +171,57 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           });
         }
         break;
+      case "www.nautiljon.com":
+      case "nautiljon.com":
+        const mediaInfo = extractNautiljonInfo();
+        if (!mediaInfo || !mediaInfo.title || !mediaInfo.type) return;
+
+        if (enableAnilist) {
+          chrome.runtime.sendMessage(
+            { action: "getAnilistMedia", search: mediaInfo.title, typePreference: mediaInfo.type.toUpperCase() },
+            function (response) {
+              if (!response) return;
+
+              if (response?.siteUrl) {
+                buttonAnilist = addCustomButton("anilist", response.siteUrl, {
+                  // styles: {
+                  //   left: `${20 * 2 + 50}px`,
+                  // },
+                });
+              }
+              if (response?.siteMalUrl && enableMal) {
+                buttonMal = addCustomButton("myanimelist", response.siteMalUrl, {
+                  styles: {
+                    left: `${20 * 2 + 50}px`,
+                  },
+                });
+              }
+            }
+          );
+        }
+        break;
       default:
         console.log("Site not supported.");
         break;
     }
   }
 
-  navigation.addEventListener("navigate", (e) => {
-    const targetUrl = new URL(e.destination.url);
-    const currentUrl = new URL(window.location.href);
+  // only for anilist
+  if (window.location.hostname === "anilist.co") {
+    navigation.addEventListener("navigate", (e) => {
+      const targetUrl = new URL(e.destination.url);
+      const currentUrl = new URL(window.location.href);
 
-    if (currentUrl.hostname != targetUrl.hostname) return;
+      if (currentUrl.hostname != targetUrl.hostname) return;
 
-    resetButton();
-    buttonMal?.remove();
-    buttonMal = null;
-    buttonAnilist?.remove();
-    buttonAnilist = null;
-    animeSwitcher(e.destination.url);
-  });
+      resetButton();
+      buttonMal?.remove();
+      buttonMal = null;
+      buttonAnilist?.remove();
+      buttonAnilist = null;
+      animeSwitcher(e.destination.url);
+    });
+  }
 
   injectCSSAnimation(animationCSS());
   animeSwitcher();
