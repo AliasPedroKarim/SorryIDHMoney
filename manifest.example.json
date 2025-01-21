@@ -7,10 +7,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
+  "permissions": ["storage", "activeTab", "tabs"],
   "content_scripts": [
     {
       "js": ["scripts/self-youtube-ads-block.js"],
@@ -30,12 +27,23 @@
     {
       "matches": ["https://myanimelist.net/*", "https://anilist.co/*"],
       "js": ["scripts/anime-switcher-content.js"]
+    },
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "js": ["scripts/twitch-rewards-content.js"]
     }
   ],
   "web_accessible_resources": [
     {
-      "matches": ["https://mavanimes.cc/*", "https://myanimelist.net/*", "https://anilist.co/*"],
+      "matches": [
+        "https://mavanimes.cc/*",
+        "https://myanimelist.net/*",
+        "https://anilist.co/*"
+      ],
       "resources": ["scripts/*"]
     }
-  ]
+  ],
+  "action": {
+    "default_popup": "interfaces/twitch-stats.html"
+  }
 }

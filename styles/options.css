@@ -2,6 +2,8 @@
   --primary-color: #FF761C;
   --text-color: #333;
   --bg-color: #f5f5f5;
+  --twitch-color: #9147ff;
+  --twitch-hover: #772ce8;
 }
 
 body {
@@ -10,6 +12,7 @@ body {
   padding: 20px;
   background-color: var(--bg-color);
   color: var(--text-color);
+  width: 300px;
 }
 
 .container {
@@ -28,38 +31,65 @@ h1 {
   text-align: center;
 }
 
-.form-group {
-  margin-bottom: 20px;
+h3 {
+  color: var(--text-color);
+  margin: 0 0 15px 0;
+  font-size: 18px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
+.settings-group {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.setting-label {
   font-weight: 500;
   color: var(--text-color);
+  margin-right: 10px;
+  flex: 1;
 }
 
 input[type="color"] {
-  width: 100px;
-  height: 40px;
+  width: 60px;
+  height: 30px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
+  padding: 0;
 }
 
 select {
-  width: 100%;
-  padding: 10px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
+  background-color: white;
+  cursor: pointer;
 }
 
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 40px;
+  height: 20px;
 }
 
 .toggle-switch input {
@@ -76,19 +106,19 @@ select {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
+  transition: .3s;
+  border-radius: 20px;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
-  transition: .4s;
+  transition: .3s;
   border-radius: 50%;
 }
 
@@ -97,7 +127,12 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(20px);
+}
+
+/* Style spécial pour le switch Twitch */
+#enable-twitch-rewards:checked + .slider {
+  background-color: var(--twitch-color);
 }
 
 button {

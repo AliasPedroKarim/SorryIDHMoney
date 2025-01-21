@@ -10,40 +10,56 @@
   <div class="container">
     <h1>Paramètres de l'extension</h1>
 
-    <div class="form-group">
-      <label for="background-color">Couleur de fond</label>
-      <input type="color" id="background-color" name="background-color" value="#ffffff">
+    <div class="settings-group">
+      <div class="setting-item">
+        <span class="setting-label">Couleur de fond</span>
+        <input type="color" id="background-color" name="background-color" value="#ffffff">
+      </div>
+
+      <div class="setting-item">
+        <span class="setting-label">Thème</span>
+        <select id="theme" name="theme">
+          <option value="light">Clair</option>
+          <option value="dark">Sombre</option>
+        </select>
+      </div>
+
+      <div class="setting-item">
+        <span class="setting-label">Activer la censure</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="censure" name="censure">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="theme">Thème</label>
-      <select id="theme" name="theme">
-        <option value="light">Clair</option>
-        <option value="dark">Sombre</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="censure">Activer la censure</label>
-      <label class="toggle-switch">
-        <input type="checkbox" id="censure" name="censure">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <div class="form-group">
+    <div class="settings-group">
       <h3>Boutons de switch d'anime</h3>
-      <label for="enable-mal">MyAnimeList</label>
-      <label class="toggle-switch">
-        <input type="checkbox" id="enable-mal" name="enable-mal">
-        <span class="slider"></span>
-      </label>
+      <div class="setting-item">
+        <span class="setting-label">MyAnimeList</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="enable-mal" name="enable-mal">
+          <span class="slider"></span>
+        </label>
+      </div>
 
-      <label for="enable-anilist">AniList</label>
-      <label class="toggle-switch">
-        <input type="checkbox" id="enable-anilist" name="enable-anilist">
-        <span class="slider"></span>
-      </label>
+      <div class="setting-item">
+        <span class="setting-label">AniList</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="enable-anilist" name="enable-anilist">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="setting-item">
+        <span class="setting-label">Récupération automatique des rewards Twitch</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="enable-twitch-rewards" name="enable-twitch-rewards">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
   </div>
 

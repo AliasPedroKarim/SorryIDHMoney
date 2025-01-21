@@ -34,11 +34,11 @@ async function getAnilistMediaInfo(search, typePreference) {
   const idMal = res?.data?.Media?.idMal;
   return res?.data?.Media
     ? {
-        ...res?.data?.Media,
-        siteMalUrl: idMal
-          ? `https://myanimelist.net/${res?.data?.Media?.type?.toLowerCase()}/${idMal}`
-          : null,
-      }
+      ...res?.data?.Media,
+      siteMalUrl: idMal
+        ? `https://myanimelist.net/${res?.data?.Media?.type?.toLowerCase()}/${idMal}`
+        : null,
+    }
     : null;
 }
 
@@ -90,6 +90,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         addTermToCache(message.cacheKey, message.term);
         console.log("Term added to cache:", message.term);
       }
+      return false;
+    case "openStatsPopup":
+      chrome.windows.create({
+        url: chrome.runtime.getURL("interfaces/twitch-stats.html"),
+        type: "popup",
+        width: 350,
+        height: 400
+      });
       return false;
     default:
       return false;

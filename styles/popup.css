@@ -48,7 +48,7 @@ h1 {
   padding: 10px 15px;
   border-radius: 6px;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 10px;
   transition: background-color 0.3s;
 }
 
@@ -60,4 +60,20 @@ h1 {
   font-size: 13px;
   color: #666;
   margin: 10px 0;
+}
+
+.stats-link {
+  display: block;
+  background-color: #9147ff;
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.stats-link:hover {
+  background-color: #772ce8;
 } 
