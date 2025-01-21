@@ -7,7 +7,11 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage", "activeTab", "tabs"],
+  "permissions": ["storage", "activeTab"],
+  "options_page": "interfaces/options.html",
+  "action": {
+    "default_popup": "interfaces/popup.html"
+  },
   "content_scripts": [
     {
       "js": ["scripts/self-youtube-ads-block.js"],
@@ -21,11 +25,19 @@
       "js": ["scripts/global-content.js"]
     },
     {
-      "matches": ["https://mavanimes.cc/*"],
+      "matches": ["https://mavanimes.cc/*", "https://mavanimes.ws/*"],
       "js": ["scripts/mavanimes-content.js"]
     },
     {
-      "matches": ["https://myanimelist.net/*", "https://anilist.co/*"],
+      "matches": ["https://v5.voiranime.com/*", "https://v6.voiranime.com/*"],
+      "js": ["scripts/v5.voiranime-content.js"]
+    },
+    {
+      "matches": [
+        "https://myanimelist.net/*",
+        "https://anilist.co/*",
+        "https://www.nautiljon.com/*"
+      ],
       "js": ["scripts/anime-switcher-content.js"]
     },
     {
@@ -37,13 +49,19 @@
     {
       "matches": [
         "https://mavanimes.cc/*",
+        "https://mavanimes.ws/*",
         "https://myanimelist.net/*",
-        "https://anilist.co/*"
+        "https://anilist.co/*",
+        "https://v5.voiranime.com/*",
+        "https://v6.voiranime.com/*",
+        "https://www.nautiljon.com/*",
+        "https://www.twitch.tv/*"
       ],
       "resources": ["scripts/*"]
+    },
+    {
+      "resources": ["styles/*.css"],
+      "matches": ["<all_urls>"]
     }
-  ],
-  "action": {
-    "default_popup": "interfaces/twitch-stats.html"
-  }
+  ]
 }
