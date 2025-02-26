@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testeur de Toasts</title>
+    <style>
+        :root {
+            --primary-color: #9147ff;
+            --success-color: #4CAF50;
+            --error-color: #F44336;
+            --warning-color: #FF9800;
+            --info-color: #2196F3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 350px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .success { background-color: var(--success-color); }
+        .error { background-color: var(--error-color); }
+        .warning { background-color: var(--warning-color); }
+        .info { background-color: var(--info-color); }
+
+        .preset-toasts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .preset-toast {
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .preset-toast:hover {
+            transform: translateY(-2px);
+        }
+
+        .info-message {
+            background-color: var(--info-color);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍞 Testeur de Toasts</h1>
+        <div class="info-message">
+            ℹ️ Les toasts s'afficheront sur la page web active, pas dans cette interface.
+        </div>
+
+        <div class="test-section">
+            <h3>Toast personnalisé</h3>
+            <div class="input-group">
+                <label for="message">Message</label>
+                <input type="text" id="message" placeholder="Votre message..." value="Ceci est un test !">
+            </div>
+
+            <div class="input-group">
+                <label for="type">Type</label>
+                <select id="type">
+                    <option value="success">Succès</option>
+                    <option value="error">Erreur</option>
+                    <option value="warning">Avertissement</option>
+                    <option value="info">Information</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="duration">Durée (ms)</label>
+                <input type="number" id="duration" value="3000" min="1000" step="500">
+            </div>
+
+            <div class="input-group">
+                <label for="position">Position</label>
+                <select id="position">
+                    <option value="top-left">Haut Gauche</option>
+                    <option value="top-center">Haut Centre</option>
+                    <option value="top-right" selected>Haut Droite</option>
+                    <option value="bottom-left">Bas Gauche</option>
+                    <option value="bottom-center">Bas Centre</option>
+                    <option value="bottom-right">Bas Droite</option>
+                </select>
+            </div>
+
+            <button id="custom-toast-btn" style="background-color: var(--primary-color); width: 100%;">
+                Afficher le toast
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h3>Toasts prédéfinis</h3>
+            <div class="preset-toasts">
+                <button class="success" data-type="success">
+                    Toast de succès
+                </button>
+                <button class="error" data-type="error">
+                    Toast d'erreur
+                </button>
+                <button class="warning" data-type="warning">
+                    Toast d'avertissement
+                </button>
+                <button class="info" data-type="info">
+                    Toast d'information
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="toast-tester.js"></script>
+</body>
+</html> 

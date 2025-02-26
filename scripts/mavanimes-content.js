@@ -55,8 +55,12 @@ function extractLinkList(inputString) {
   if (isGekijouban) {
     result = result.replace("gekijouban-", "").trim();
   }
+  
+  // add /anime/ to the result in url
+  const url = new URL(result);
+  url.pathname = `/anime${url.pathname}`;
 
-  return result;
+  return url.toString();
 }
 
 if ([
@@ -166,8 +170,11 @@ if ([
     }
   }
 
-  if (window.location.pathname?.endsWith("-vostfr")) {
-    const title = document.querySelector(".release .header h1.title");
+  const isAnimePage = window.location.pathname?.startsWith("/anime/");
+  const isEpisodePage = window.location.pathname?.endsWith("-vostfr");
+
+  if (isAnimePage || isEpisodePage) {
+    const title = isAnimePage ? document.querySelector(".header h1.title") : document.querySelector(".release .header h1.title");
     if (!title) return;
     const episodeTitleRaw = extractEpisodeTitle(title.textContent);
     const episodeTitle = episodeTitleRaw.toLowerCase();
@@ -177,8 +184,10 @@ if ([
     // Rewrite the episode title in title page, split by "|" and replace the first part with the episode title
     document.title = `${title.textContent} | ${document.title?.split("|")[1]}`;
 
-    checkPreviousAndNext();
-    addBackToListButton();
+    if (isEpisodePage) {
+      checkPreviousAndNext();
+      addBackToListButton();
+    }
 
     // setupButtonAdvanceVideo();
 
@@ -190,34 +199,6 @@ if ([
         addButtons(response);
       }
     );
-
-    // chrome.runtime.sendMessage(
-    //   { action: "getCachedDataByTerm", term: episodeTitle },
-    //   function (cachedData) {
-    //     if (!cachedData) return;
-
-    //     if (cachedData) {
-    //       addButtons(cachedData);
-    //     } else {
-    //       chrome.runtime.sendMessage(
-    //         { action: "getAnilistMedia", search: episodeTitle },
-    //         function (response) {
-    //           if (!response) return;
-
-    //           chrome.runtime.sendMessage({
-    //             action: "cacheData",
-    //             cacheKey: episodeTitle,
-    //             data: response,
-    //             expirationInSeconds: 86400,
-    //             terms: [episodeTitle],
-    //           });
-
-    //           addButtons(response);
-    //         }
-    //       );
-    //     }
-    //   }
-    // );
   }
 })();
 

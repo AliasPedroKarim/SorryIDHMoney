@@ -149,4 +149,22 @@ button {
 
 button:hover {
   background-color: #e66b19;
+}
+
+.dev-tools {
+  margin-top: 15px;
+}
+
+.dev-link {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #2196F3;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.dev-link:hover {
+  background-color: #1976D2;
 } 

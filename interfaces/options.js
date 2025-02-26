@@ -1,12 +1,13 @@
-// Chargement des options sauvegardées
-function restoreOptions() {
+// Charger les paramètres sauvegardés
+document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.sync.get({
         backgroundColor: '#ffffff',
         theme: 'light',
-        censure: true,
+        censure: false,
         enableMal: true,
         enableAnilist: true,
-        enableTwitchRewards: true
+        enableTwitchRewards: true,
+        enableToasts: true
     }, function (items) {
         document.getElementById('background-color').value = items.backgroundColor;
         document.getElementById('theme').value = items.theme;
@@ -14,8 +15,9 @@ function restoreOptions() {
         document.getElementById('enable-mal').checked = items.enableMal;
         document.getElementById('enable-anilist').checked = items.enableAnilist;
         document.getElementById('enable-twitch-rewards').checked = items.enableTwitchRewards;
+        document.getElementById('enable-toasts').checked = items.enableToasts;
     });
-}
+});
 
 // Écouteurs d'événements pour les changements
 document.getElementById('background-color').addEventListener('input', function (e) {
@@ -68,4 +70,6 @@ document.getElementById('enable-twitch-rewards').addEventListener('change', func
     });
 });
 
-document.addEventListener('DOMContentLoaded', restoreOptions);
+document.getElementById('enable-toasts').addEventListener('change', function (e) {
+    chrome.storage.sync.set({ enableToasts: e.target.checked });
+});
