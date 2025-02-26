@@ -4,6 +4,15 @@
 // case-insensitive substring in a string.
 
 const srcUtils = chrome.runtime.getURL("scripts/utils.js");
+const toastScript = chrome.runtime.getURL("libs/toast-manager.js");
+
+// Fonction pour afficher un toast
+let showToast;
+
+// Charger le module de toast
+import(toastScript).then(module => {
+  showToast = module.showToast;
+});
 
 function findCaseInsensitiveSubstring(sourceString, searchString) {
   const regex = new RegExp(searchString, "i");
@@ -194,7 +203,17 @@ if ([
     chrome.runtime.sendMessage(
       { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
       function (response) {
-        if (!response) return;
+        if (!response) {
+          // Afficher un toast d'erreur si l'anime n'est pas trouvé
+          if (showToast) {
+            showToast(`Anime non trouvé : ${episodeTitleRaw}`, {
+              type: 'warning',
+              duration: 5000,
+              position: 'bottom-left'
+            });
+          }
+          return;
+        }
 
         addButtons(response);
       }
