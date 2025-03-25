@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionnaire d'Animes Non Trouvés</title>
+  <link rel="stylesheet" href="../styles/anime-manager.css">
+</head>
+<body>
+  <a href="popup.html" class="back-link">Retour</a>
+  <div class="container">
+    <h1>Gestionnaire d'Animes Non Trouvés</h1>
+    
+    <div class="tabs">
+      <div class="tab" data-tab="not-found">Non trouvés</div>
+      <div class="tab" data-tab="custom-urls">URLs personnalisées</div>
+      <div class="tab" data-tab="ignored">Ignorés</div>
+    </div>
+    
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Rechercher un anime...">
+    </div>
+
+    <div class="tab-content" id="not-found-tab">
+      <ul class="anime-list" id="not-found-list">
+        <!-- Les animes non trouvés seront ajoutés ici dynamiquement -->
+      </ul>
+      <div class="empty-message" id="not-found-empty">Aucun anime non trouvé dans le cache.</div>
+    </div>
+
+    <div class="tab-content" id="custom-urls-tab">
+      <ul class="anime-list" id="custom-urls-list">
+        <!-- Les URLs personnalisées seront ajoutées ici dynamiquement -->
+      </ul>
+      <div class="empty-message" id="custom-urls-empty">Aucune URL personnalisée définie.</div>
+    </div>
+
+    <div class="tab-content" id="ignored-tab">
+      <ul class="anime-list" id="ignored-list">
+        <!-- Les animes ignorés seront ajoutés ici dynamiquement -->
+      </ul>
+      <div class="empty-message" id="ignored-empty">Aucun anime ignoré.</div>
+    </div>
+  </div>
+
+  <script type="module" src="anime-manager.js"></script>
+</body>
+</html> 

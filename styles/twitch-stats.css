@@ -1,0 +1,94 @@
+@import 'base.css';
+
+body {
+  width: var(--popup-width);
+}
+
+.stats-container {
+  padding: var(--spacing-md);
+  background-color: var(--twitch-purple);
+  color: var(--twitch-text);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin: var(--spacing-md);
+}
+
+.stat-item {
+  margin: var(--spacing-sm) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label {
+  font-weight: 500;
+}
+
+.stat-value {
+  background: var(--twitch-background);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+}
+
+.stats-header {
+  color: var(--twitch-text);
+  margin: var(--spacing-lg) 0 var(--spacing-sm);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid var(--twitch-border);
+}
+
+.last-update {
+  font-size: var(--font-size-xs);
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  color: var(--twitch-text-muted);
+}
+
+.reset-button {
+  width: 100%;
+  padding: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+  background: var(--twitch-purple-dark);
+  border: none;
+  color: var(--twitch-text);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.reset-button:hover {
+  background: var(--twitch-purple-darker);
+}
+
+.channel-stats {
+  margin-top: var(--spacing-lg);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.channel-item {
+  background: var(--twitch-item-bg);
+  padding: var(--spacing-sm);
+  margin: var(--spacing-xs) 0;
+  border-radius: var(--radius-sm);
+}
+
+.channel-name {
+  font-weight: bold;
+  color: var(--twitch-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.channel-details {
+  font-size: 0.9em;
+  color: var(--twitch-text-muted);
+}
+
+/* Style du bouton de retour adapté pour Twitch */
+.back-link {
+  background-color: var(--twitch-purple-dark);
+}
+
+.back-link:hover {
+  background-color: var(--twitch-purple-darker);
+} 

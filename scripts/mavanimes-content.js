@@ -5,13 +5,19 @@
 
 const srcUtils = chrome.runtime.getURL("scripts/utils.js");
 const toastScript = chrome.runtime.getURL("libs/toast-manager.js");
+const animeCacheScript = chrome.runtime.getURL("scripts/anime-cache-manager.js");
 
 // Fonction pour afficher un toast
 let showToast;
+let animeCache;
 
-// Charger le module de toast
-import(toastScript).then(module => {
-  showToast = module.showToast;
+// Charger les modules
+Promise.all([
+  import(toastScript),
+  import(animeCacheScript)
+]).then(([toastModule, cacheModule]) => {
+  showToast = toastModule.showToast;
+  animeCache = cacheModule.animeCache;
 });
 
 function findCaseInsensitiveSubstring(sourceString, searchString) {
@@ -165,11 +171,11 @@ if ([
   document?.querySelectorAll("#menu-items li a")[0]?.setAttribute("href", "/");
 
   function addButtons(data) {
-    if (data?.siteMalUrl) {
-      addCustomButton("myanimelist", data.siteMalUrl, { openInNewTab: true });
+    if (data?.siteMalUrl || data?.malUrl) {
+      addCustomButton("myanimelist", data.siteMalUrl || data.malUrl, { openInNewTab: true });
     }
 
-    if (data?.siteUrl) {
+    if (data?.siteUrl || data?.anilistUrl) {
       addCustomButton("anilist", data.siteUrl, {
         styles: {
           left: `${20 * 2 + 50}px`,
@@ -198,18 +204,51 @@ if ([
       addBackToListButton();
     }
 
-    // setupButtonAdvanceVideo();
+    // Vérifier si l'anime est dans le cache avant de faire la recherche
+    const cachedResult = await animeCache.isInCache(episodeTitle);
+    if (cachedResult === true) {
+      // Anime ignoré, ne rien faire
+      return;
+    } else if (cachedResult) {
+      // URL personnalisée trouvée, utiliser directement
+      addButtons({
+        siteUrl: cachedResult.anilistUrl || cachedResult,
+        malUrl: cachedResult.malUrl || null,
+        siteMalUrl: null // On n'a pas l'URL MAL, mais ce n'est pas grave
+      });
+      return;
+    }
 
     chrome.runtime.sendMessage(
       { action: "getAnilistMedia", search: episodeTitle, typePreference: "ANIME" },
       function (response) {
         if (!response) {
-          // Afficher un toast d'erreur si l'anime n'est pas trouvé
+          // Ajouter l'anime au cache (avec autoIgnore=true)
+          animeCache.addNotFoundAnime(episodeTitle, window.location.href, episodeTitleRaw, true);
+          
+          // Afficher un toast d'erreur avec des boutons
           if (showToast) {
             showToast(`Anime non trouvé : ${episodeTitleRaw}`, {
               type: 'warning',
-              duration: 5000,
-              position: 'bottom-left'
+              duration: 8000,
+              position: 'bottom-left',
+              buttons: [
+                {
+                  text: 'Ignorer',
+                  onClick: () => animeCache.ignoreAnime(episodeTitle),
+                  type: 'danger'
+                },
+                {
+                  text: 'Gérer URL',
+                  onClick: () => {
+                    chrome.runtime.sendMessage({
+                      action: 'openAnimeManager',
+                      searchTerm: episodeTitle
+                    });
+                  },
+                  type: 'primary'
+                }
+              ]
             });
           }
           return;

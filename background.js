@@ -124,6 +124,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         height: 400
       });
       return false;
+    case "openAnimeManager":
+      const searchTerm = message.searchTerm || '';
+      const url = chrome.runtime.getURL(`interfaces/anime-manager.html${searchTerm ? `?highlight=${encodeURIComponent(searchTerm)}` : ''}`);
+      chrome.tabs.create({ url });
+      return false;
     default:
       return false;
   }

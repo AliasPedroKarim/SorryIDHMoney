@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>À propos de l'extension</title>
+  <link rel="stylesheet" href="../styles/about.css">
+</head>
+<body>
+  <a href="popup.html" class="back-link">Retour</a>
+  
+  <div class="container">
+    <div class="logo-container">
+      <img src="../icons/icon128.png" alt="Logo de l'extension" class="logo">
+    </div>
+    
+    <h1 id="extension-name">Anime Companion</h1>
+    <div class="version">Version <span id="extension-version">1.0.0</span></div>
+    <p id="extension-description" class="description"></p>
+    
+    <div class="alert error" id="manifest-error" style="display: none;">
+      Impossible de charger les informations de l'extension.
+    </div>
+    
+    <div class="card">
+      <h2>Créateur</h2>
+      <div class="creator">
+        <img src="https://github.com/AliasPedroKarim.png" alt="Avatar du créateur" class="avatar" id="github-avatar">
+        <div class="creator-info">
+          <div class="creator-name" id="extension-author">@AliasPedroKarim</div>
+          <div class="creator-links">
+            <a href="https://github.com/AliasPedroKarim" target="_blank" class="social-link github">
+              <span class="icon icon-github"></span>GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Informations</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Installée le</div>
+          <div class="info-value" id="install-date">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Mise à jour le</div>
+          <div class="info-value" id="update-date">-</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Permissions</h2>
+      <ul class="permissions-list" id="permissions-list">
+        <!-- Liste des permissions sera générée par JS -->
+      </ul>
+    </div>
+    
+    <div class="card">
+      <h2>Statistiques</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="total-animes">-</div>
+          <div class="stat-label">Animes en cache</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="twitch-points">-</div>
+          <div class="stat-label">Points Twitch</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="twitch-clicks">-</div>
+          <div class="stat-label">Rewards récupérées</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Top chaînes Twitch</h2>
+      <div class="top-list" id="top-channels">
+        <!-- Les chaînes Twitch les plus visitées seront injectées ici -->
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Derniers animes recherchés</h2>
+      <div class="top-list" id="top-animes">
+        <!-- Les derniers animes recherchés seront injectés ici -->
+      </div>
+    </div>
+    
+    <div class="card danger">
+      <h2>Réinitialisation</h2>
+      <p class="warning-text">Attention, cette action effacera toutes vos données et préférences.</p>
+      <button id="reset-all-data" class="btn btn-danger">Réinitialiser toutes les données</button>
+    </div>
+    
+    <div class="disclaimer">
+      Cette extension est un projet personnel et n'est pas affiliée à MyAnimeList, AniList ou Twitch.
+    </div>
+    
+    <div class="copyright">
+      © <span id="current-year">2023</span> <span id="extension-author-copyright">@AliasPedroKarim</span>. Tous droits réservés.
+    </div>
+  </div>
+  
+  <script src="about.js"></script>
+</body>
+</html> 

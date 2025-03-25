@@ -4,7 +4,7 @@ let style = null;
 export function addCustomButton(site, link, options = {}) {
   const { openInNewTab = false, styles = {} } = options;
   const shortcutKey = site === "myanimelist" ? 'M' : 'A'; // M pour MAL, A pour AniList
-  
+
   linkElement = document.createElement("a");
   linkElement.classList.add("custom-button");
   linkElement.href = link;
@@ -171,7 +171,7 @@ const listAnimations = [
 ];
 
 export const animationCSS = () =>
-  listAnimations[Math.floor(Math.random() * listAnimations.length)] +  `
+  listAnimations[Math.floor(Math.random() * listAnimations.length)] + `
     .custom-button {
       animation: buttonLinkAnimation 2s ease infinite;
     }

@@ -3,14 +3,26 @@
   "name": "SorryIDHMoney",
   "description": "Euhh! On a pas beaucoup d'argent ^^",
   "version": "0.1",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "scripting"],
   "options_page": "interfaces/options.html",
   "action": {
-    "default_popup": "interfaces/popup.html"
+    "default_popup": "interfaces/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "content_scripts": [
     {
@@ -26,11 +38,13 @@
     },
     {
       "matches": ["https://mavanimes.cc/*", "https://mavanimes.ws/*"],
-      "js": ["scripts/mavanimes-content.js"]
+      "js": ["scripts/mavanimes-content.js"],
+      "type": "module"
     },
     {
       "matches": ["https://v5.voiranime.com/*", "https://v6.voiranime.com/*"],
-      "js": ["scripts/v5.voiranime-content.js"]
+      "js": ["scripts/voiranime-content.js"],
+      "type": "module"
     },
     {
       "matches": [
@@ -38,29 +52,18 @@
         "https://anilist.co/*",
         "https://www.nautiljon.com/*"
       ],
-      "js": ["scripts/anime-switcher-content.js"]
+      "js": ["scripts/anime-switcher-content.js"],
+      "type": "module"
     },
     {
       "matches": ["https://www.twitch.tv/*"],
-      "js": ["scripts/twitch-rewards-content.js"]
+      "js": ["scripts/twitch-rewards-content.js"],
+      "type": "module"
     }
   ],
   "web_accessible_resources": [
     {
-      "matches": [
-        "https://mavanimes.cc/*",
-        "https://mavanimes.ws/*",
-        "https://myanimelist.net/*",
-        "https://anilist.co/*",
-        "https://v5.voiranime.com/*",
-        "https://v6.voiranime.com/*",
-        "https://www.nautiljon.com/*",
-        "https://www.twitch.tv/*"
-      ],
-      "resources": ["scripts/*"]
-    },
-    {
-      "resources": ["styles/*.css"],
+      "resources": ["libs/*", "scripts/*", "styles/*", "interfaces/*"],
       "matches": ["<all_urls>"]
     }
   ]

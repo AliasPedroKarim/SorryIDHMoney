@@ -1,0 +1,120 @@
+@import 'base.css';
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--gray-light);
+  margin-bottom: var(--spacing-lg);
+}
+
+.tab {
+  padding: var(--spacing-md) var(--spacing-lg);
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-bottom: none;
+  margin-right: var(--spacing-xs);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background-color: var(--light-gray);
+  transition: all var(--transition-fast);
+}
+
+.tab.active {
+  background-color: var(--white);
+  border-color: var(--gray-light);
+  border-bottom-color: var(--white);
+  margin-bottom: -1px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.tab:hover:not(.active) {
+  background-color: var(--gray-light);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.search-bar {
+  margin-bottom: var(--spacing-lg);
+}
+
+.search-bar input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
+}
+
+.anime-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.anime-item {
+  padding: var(--spacing-lg);
+  border: 1px solid var(--gray-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  background-color: var(--white);
+  transition: all var(--transition-fast);
+}
+
+.anime-item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.anime-item.highlight {
+  border-color: var(--primary);
+  background-color: rgba(145, 71, 255, 0.05);
+}
+
+.anime-title {
+  font-weight: 600;
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-xs);
+  color: var(--dark);
+}
+
+.anime-search-term {
+  color: var(--gray-dark);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.anime-source {
+  font-size: var(--font-size-sm);
+  color: var(--gray);
+  margin-bottom: var(--spacing-md);
+  word-break: break-all;
+}
+
+.anime-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.url-input {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-grow: 1;
+}
+
+.url-input input {
+  flex-grow: 1;
+}
+
+.container {
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin: var(--spacing-md);
+} 
