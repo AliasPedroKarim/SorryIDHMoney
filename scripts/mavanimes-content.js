@@ -11,15 +11,6 @@ const animeCacheScript = chrome.runtime.getURL("scripts/anime-cache-manager.js")
 let showToast;
 let animeCache;
 
-// Charger les modules
-Promise.all([
-  import(toastScript),
-  import(animeCacheScript)
-]).then(([toastModule, cacheModule]) => {
-  showToast = toastModule.showToast;
-  animeCache = cacheModule.animeCache;
-});
-
 function findCaseInsensitiveSubstring(sourceString, searchString) {
   const regex = new RegExp(searchString, "i");
   const matchResult = sourceString.match(regex);
@@ -162,6 +153,15 @@ if ([
 }
 
 (async () => {
+  // Charger les modules de manière asynchrone
+  const [toastModule, cacheModule] = await Promise.all([
+    import(toastScript),
+    import(animeCacheScript)
+  ]);
+  
+  showToast = toastModule.showToast;
+  animeCache = cacheModule.animeCache;
+
   const { addCustomButton, animationCSS, injectCSSAnimation } = await import(
     srcUtils
   );
@@ -204,19 +204,23 @@ if ([
       addBackToListButton();
     }
 
-    // Vérifier si l'anime est dans le cache avant de faire la recherche
-    const cachedResult = await animeCache.isInCache(episodeTitle);
-    if (cachedResult === true) {
-      // Anime ignoré, ne rien faire
-      return;
-    } else if (cachedResult) {
-      // URL personnalisée trouvée, utiliser directement
-      addButtons({
-        siteUrl: cachedResult.anilistUrl || cachedResult,
-        malUrl: cachedResult.malUrl || null,
-        siteMalUrl: null // On n'a pas l'URL MAL, mais ce n'est pas grave
-      });
-      return;
+    try {
+      // Vérifier si l'anime est dans le cache avant de faire la recherche
+      const cachedResult = await animeCache.isInCache(episodeTitle);
+      if (cachedResult === true) {
+        // Anime ignoré, ne rien faire
+        return;
+      } else if (cachedResult) {
+        // URL personnalisée trouvée, utiliser directement
+        addButtons({
+          siteUrl: cachedResult.anilistUrl || cachedResult,
+          malUrl: cachedResult.malUrl || null,
+          siteMalUrl: null
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification du cache:', error);
+      // Continuer avec la recherche normale en cas d'erreur
     }
 
     chrome.runtime.sendMessage(
